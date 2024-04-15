@@ -1,0 +1,15 @@
+**/migrations/[0-9][0-9][0-9][0-9]_*.py
+.DS_Store
+*.pyc
+*.mo
+*.swp
+.idea/
+.*project
+*env*/
+*.sqlite3
+!/**/dot_restrict_scopes/migrations/0001_initial.py
+*.cnf
+.vscode/
+.env
+**/celerybeat-schedule*
+.python-version
