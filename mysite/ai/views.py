@@ -404,6 +404,22 @@ def get_conversation_chain(vetorestore, openai_api_key, model_selection):
     3. 생성된 대화형 검색 체인을 반환합니다.
     """
     llm = ChatOpenAI(openai_api_key=openai_api_key, model_name=model_selection, temperature=0)
+
+    prompt = '''
+        You are a helpful assistant for the company SK 7mobile.
+        and You are highly skilled AI trained in language comprehension and summarization.
+        I would like to read the follwing text and summarize it into a concis abstract paragraph.
+        The conversation is between a customer service agent and the customer.
+        Please summarize the conversation so that what the customer service agent and the customer said can be distinguished from each other.
+        and Please write the customer's request as the title and Summarize the topics of the conversation in bullet points as summary.
+        If there is a phone number in the conversation, change it to the following format: {"svc_tel_no" : "010xxxxxxxx"}
+        Replace the phone number with the actual number found in the conversation.
+        all answer in Korean
+        Aim to retain the most important points,
+        providing a coherent and readable summary that colud help a person understand the main points of the discussion without needing to read the entire text.
+        please avoid unnecessary details or tangential points.
+
+    '''
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
         chain_type="stuff",
@@ -411,7 +427,8 @@ def get_conversation_chain(vetorestore, openai_api_key, model_selection):
         memory=ConversationBufferMemory(memory_key='chat_history', return_messages=True, output_key='answer'),
         get_chat_history=lambda h: h,
         return_source_documents=True,
-        verbose=True
+        verbose=True,
+        combine_docs_chain_kwargs={"prompt": prompt}
     )
 
     return conversation_chain
